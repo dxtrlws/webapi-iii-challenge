@@ -36,7 +36,14 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', validateUserId, async (req, res) => {
+    try{
+        const user = await dbUsers.remove(req.user.id)
+        res.status(200).json(user)
+    } catch(err) {
+        res.status(500).json({error: 'unable to remove user'})
+    }
+});
 
 router.put('/:id', (req, res) => {});
 
