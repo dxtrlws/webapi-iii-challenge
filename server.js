@@ -1,13 +1,13 @@
 const express = require('express');
-const usersRouter = require('./users/userRouter')
+const usersRouter = require('./users/userRouter');
 const server = express();
+server.use(express.json());
 
 // Routes
-server.use('/api/users', usersRouter)
+server.use('/api/users', usersRouter);
 
 // Middleware
 server.use(logger);
-
 
 server.get('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
