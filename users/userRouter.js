@@ -39,7 +39,12 @@ router.get('/:id', validateUserId, async (req, res) => {
 router.get('/:id/posts', validateUserId, async (req, res) => {
   try {
     const posts = await dbUsers.getUserPosts(req.user.id);
-    res.status(200).json(posts);
+    if(posts.length) {
+        res.status(200).json(posts);
+
+    } else {
+        res.status(200).json({ message: 'User has no posts '})
+    }
   } catch (err) {
     res.status(500).json({ error: 'unable to process request' });
   }
