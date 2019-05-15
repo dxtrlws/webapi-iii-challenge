@@ -17,15 +17,22 @@ router.get('/:id', validatePostId, (req, res) => {
 });
 
 router.delete('/:id', validatePostId, async (req, res) => {
-    try{
-        const post = await dbPosts.remove(req.params.id)
-        res.status(200).json({message: 'post has been removed', post})
-    } catch(err) {
-        res.status(500).json({ error: 'Unable to process request'})
-    }
+  try {
+    const post = await dbPosts.remove(req.params.id);
+    res.status(200).json({ message: 'post has been removed', post });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to process request' });
+  }
 });
 
-router.put('/:id', (req, res) => {});
+router.put('/:id', validatePostId, async (req, res) => {
+  try {
+    const post = await dbPosts.update(req.params.id, req.body);
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to process request' });
+  }
+});
 
 // custom middleware
 
