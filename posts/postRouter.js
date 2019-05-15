@@ -1,27 +1,40 @@
-const express = 'express';
+const express = require('express');
+const dbPosts = require('./postDb');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-
+router.get('/', async (req, res) => {
+  try {
+    const posts = await dbPosts.get();
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to process request' });
+  }
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', validatePostId, (req, res) => {
+  res.status(200).json(req.post);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res) => {});
 
-});
-
-router.put('/:id', (req, res) => {
-
-});
+router.put('/:id', (req, res) => {});
 
 // custom middleware
 
-function validatePostId(req, res, next) {
-
-};
+async function validatePostId(req, res, next) {
+  try {
+    const { id } = req.params;
+    const posts = await dbPosts.getById(id);
+    if (posts) {
+      req.post = posts;
+      next();
+    } else {
+      res.status(400).json({ message: 'Invalid post ID' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to process request' });
+  }
+}
 
 module.exports = router;
